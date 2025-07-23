@@ -5,3 +5,4 @@ public class RequestEventJson
     public string Details { get; set; } = string.Empty;
     public int MaximumAttendees { get; set; }
 }
+ 
