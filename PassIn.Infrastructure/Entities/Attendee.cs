@@ -10,6 +10,7 @@
 
         public Guid Event_Id { get; set; }
 
-        public DateTime Created_At { get; set; } 
+        public DateTime Created_At { get; set; }
+        public CheckIn? CheckIn { get; set; }
     }
 }

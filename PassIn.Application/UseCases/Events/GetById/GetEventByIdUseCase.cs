@@ -10,7 +10,6 @@ namespace PassIn.Application.UseCases.Events.GetById
         {
             var dbContext = new PassInDbContext();
 
-            //Alternativa: dbContext.Events.FirstOrDefault(ev => ev.Id == id);
 
             var entity = dbContext.Events.Find(id);
 
@@ -23,7 +22,7 @@ namespace PassIn.Application.UseCases.Events.GetById
                 Title = entity.Title,
                 Details = entity.Details,
                 MaximumAttendees = entity.Maximum_Attendees,
-                AttendeesAmount = -1
+                AttendeesAmount = entity.Attendees.Count(),
             };
         }
     }

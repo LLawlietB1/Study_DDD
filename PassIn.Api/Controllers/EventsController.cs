@@ -4,6 +4,7 @@ using PassIn.Application.UseCases.Events.Register;
 using PassIn.Application.UseCases.Events.RegisterAttendee;
 using PassIn.Communication.Requests;
 using PassIn.Communication.Responses;
+using PassIn.Exceptions;
 
 namespace PassIn.Api.Controllers;
 
@@ -29,26 +30,26 @@ public class EventsController : ControllerBase
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
     public IActionResult GetByID([FromRoute] Guid id)
     {
-        var useCase = new GetEventByIdUseCase();
+        try
+        {
+            var useCase = new GetEventByIdUseCase();
 
-        var response = useCase.Execute(id);
+            var response = useCase.Execute(id);
 
-        return Ok(response);
+            return Ok(response);
+        }
+
+        catch (PassInException ex)
+        {
+            return NotFound(new ResponseErrorJson(ex.Message));
+        }
+
+        catch
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorJson("Unknown error"));
+        }
     }
 
-    [HttpPost]
-    [Route("{eventId}/register")]
-    [ProducesResponseType(typeof(ResponseRegisteredJson), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status409Conflict)]
-    public IActionResult Register([FromRoute]Guid eventId, [FromBody] RequestRegisterEventJson request)
-    {
-        var useCase = new RegisterAttendeeOnEventUseCase();
-
-        var response =  useCase.Execute(eventId, request); 
-
-        return Created(string.Empty, response);
-    } 
+    
 }
 
